@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package crictl
 
 import (
 	pb "k8s.io/cri-api/pkg/apis/runtime/v1"
