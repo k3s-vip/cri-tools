@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package crictl
 
 import (
 	"context"
@@ -217,6 +217,14 @@ func loadContainerConfig(path string) (*pb.ContainerConfig, error) {
 
 	if config.GetMetadata().GetName() == "" {
 		return nil, fmt.Errorf("name is not in metadata %q", config.GetMetadata())
+	}
+
+	if config.GetImage() == nil {
+		return nil, errors.New("image is not set")
+	}
+
+	if config.GetImage().GetImage() == "" {
+		return nil, fmt.Errorf("image field is not set in image %q", config.GetImage())
 	}
 
 	return &config, nil
