@@ -38,6 +38,7 @@ VERSION ?= $(shell git describe --tags --dirty --always | sed 's/^v//')
 CGO_ENABLED ?= 0
 GOFLAGS ?= -trimpath
 GO_LDFLAGS := $(GO_LDFLAGS) -X $(PROJECT)/pkg/version.Version=$(VERSION)
+export GOFLAGS
 
 BUILD_PATH := $(shell pwd)/build
 BUILD_BIN_PATH := $(BUILD_PATH)/bin/$(GOOS)/$(GOARCH)
@@ -100,7 +101,6 @@ critest: ## Build the critest binary.
 $(CRITEST):
 	CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -c -o $@ \
 		-ldflags '$(GO_LDFLAGS)' \
-		$(GOFLAGS) \
 	     $(PROJECT)/cmd/critest
 
 .PHONY: crictl
@@ -110,7 +110,6 @@ crictl: ## Build the crictl binary.
 $(CRICTL):
 	CGO_ENABLED=$(CGO_ENABLED) $(GO_BUILD) -o $@ \
 		-ldflags '$(GO_LDFLAGS)' \
-		$(GOFLAGS) \
 		$(PROJECT)/cmd/crictl
 
 .PHONY: clean
@@ -200,7 +199,6 @@ test-crictl: $(GINKGO) ## Run the crictl test suite.
 	# Run go test for templates_test.go and util_test.go
 	CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) \
 		-ldflags '$(GO_LDFLAGS)' \
-		$(GOFLAGS) \
 		$(PROJECT)/cmd/crictl
 	$(GINKGO) $(TESTFLAGS) \
 		-r -p \
