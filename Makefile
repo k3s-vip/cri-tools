@@ -174,7 +174,7 @@ verify-dependencies: $(BUILD_BIN_PATH)/zeitgeist ## Verify third party dependenc
 	$(ZEITGEIST) validate --local-only --base-path . --config dependencies.yaml
 
 $(ZEITGEIST): $(BUILD_BIN_PATH)
-	$(call curl_to,https://storage.googleapis.com/k8s-artifacts-sig-release/kubernetes-sigs/zeitgeist/$(ZEITGEIST_VERSION)/zeitgeist-amd64-linux,$(ZEITGEIST))
+	$(call curl_to,https://storage.googleapis.com/k8s-artifacts-sig-release/kubernetes-sigs/zeitgeist/$(ZEITGEIST_VERSION)/zeitgeist-$(GOARCH)-$(GOOS),$(ZEITGEIST))
 
 .PHONY: verify-go-modules
 verify-go-modules: ## Verify vendored golang modules.

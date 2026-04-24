@@ -42,4 +42,5 @@ CLAUDE.md
 .*/
 # Except:
 !.github/
+!.skills/
 

@@ -18,11 +18,7 @@ The project uses `make` for building and running tests.
 
 ### Validation
 
-Before completing any task, agents **must** verify their changes by running the following commands:
-
-1. **Linter**: `make verify-lint`
-2. **Formatting**: `make verify-prettier`
-3. **Tests**: Ensure relevant tests pass (see the [Testing](#testing) section).
+Before completing any task, agents **must** verify their changes by running `make verify` and ensuring relevant tests pass (see the [Testing](#testing) section).
 
 Failure to run these checks may result in CI failures.
 
@@ -126,3 +122,7 @@ The project's CI/CD pipeline is defined in the `.github/workflows` directory. Th
 ### Containerd Workflow
 
 The `containerd.yml` workflow runs tests against different versions of `containerd` on both Linux and Windows. It also tests against different runtimes and CNI configurations.
+
+## Skills
+
+- [After Release](.skills/after-release.md) — Update the master branch after a release is created
