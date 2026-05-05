@@ -65,6 +65,7 @@ VERIFY_BOILERPLATE := $(BUILD_BIN_PATH)/verify_boilerplate.py
 
 CRITEST := $(BUILD_BIN_PATH)/critest$(BIN_EXT)
 CRICTL := $(BUILD_BIN_PATH)/crictl$(BIN_EXT)
+CRICTL_E2E := $(BUILD_BIN_PATH)/crictl-e2e$(BIN_EXT)
 
 all: binaries
 
@@ -102,6 +103,16 @@ $(CRITEST):
 	CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -c -o $@ \
 		-ldflags '$(GO_LDFLAGS)' \
 	     $(PROJECT)/cmd/critest
+
+.PHONY: crictl-e2e
+crictl-e2e: ## Build the crictl-e2e binary.
+	@$(MAKE) -B $(CRICTL_E2E)
+
+$(CRICTL_E2E):
+	CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -c -o $@ \
+		-ldflags '$(GO_LDFLAGS)' \
+		$(GOFLAGS) \
+	     $(PROJECT)/test/e2e
 
 .PHONY: crictl
 crictl: ## Build the crictl binary.
@@ -192,6 +203,25 @@ test-e2e: $(GINKGO) ## Run the e2e test suite.
 		--vv \
 		test \
 		-- \
+		$(TESTFLAGS)
+
+.PHONY: test-critest-containerd
+test-critest-containerd: ## Run the critest in a container with containerd.
+	# AppArmor tests must be skipped as the containerized environment does not support them.
+	hack/run-e2e-container.sh /usr/local/bin/critest-tools/critest \
+		--runtime-endpoint=unix:///run/containerd/containerd.sock \
+		--ginkgo.vv \
+		--ginkgo.skip="AppArmor" \
+		$(TESTFLAGS)
+
+.PHONY: test-crictl-e2e-containerd
+test-crictl-e2e-containerd: ## Run the crictl e2e tests in a container with containerd.
+	# AppArmor tests must be skipped as the containerized environment does not support them.
+	hack/run-e2e-container.sh /usr/local/bin/critest-tools/crictl-e2e \
+		-crictl-binary-path=/usr/local/bin/critest-tools/crictl \
+		-crictl-runtime-endpoint=unix:///run/containerd/containerd.sock \
+		--ginkgo.vv \
+		--ginkgo.skip="AppArmor" \
 		$(TESTFLAGS)
 
 .PHONY: test-crictl

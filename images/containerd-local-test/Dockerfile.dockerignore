@@ -1,0 +1,5 @@
+*
+!images/containerd-local-test/Dockerfile
+!images/containerd-local-test/entrypoint.sh
+!hack/setup-containerd.sh
+!hack/wait-for-containerd.sh

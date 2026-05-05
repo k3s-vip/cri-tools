@@ -41,6 +41,12 @@ To build `crictl` run:
 make crictl
 ```
 
+To build the `crictl` e2e tests binary, run:
+
+```bash
+make crictl-e2e
+```
+
 ### Linter rules
 
 To install the recommended linter (`golangci-lint`), run:
@@ -101,6 +107,42 @@ This is how tests will run on CI/CD. In order to run a single test while debuggi
 
 ```bash
 sudo PATH="$PATH:$(pwd)/build/bin/<GOOS>/<GOARCH>" ./build/bin/<GOOS>/<GOARCH>/critest --ginkgo.vv --ginkgo.focus="<regex_to_match_test_description>"
+```
+
+#### Running Tests in a Container
+
+If you don't have a local container runtime installed, you can run the tests in a container using Docker. This will build a local image with `containerd` and run the tests inside it. This approach doesn't require `sudo` if your user has access to Docker.
+
+**Note:** AppArmor tests must be skipped as the containerized environment does not support them. The `make` targets below already include the skip flag.
+
+##### Running `critest` with containerd
+
+To run all `critest` validation tests:
+
+```bash
+make test-critest-containerd
+```
+
+##### Running `crictl` e2e tests with containerd
+
+To run `crictl` e2e tests:
+
+```bash
+make test-crictl-e2e-containerd
+```
+
+##### Running a subset of tests
+
+You can pass `TESTFLAGS` to focus on a specific test.
+
+```bash
+make test-critest-containerd TESTFLAGS='--ginkgo.focus="public image"'
+```
+
+Or for `crictl` e2e:
+
+```bash
+make test-crictl-e2e-containerd TESTFLAGS='--ginkgo.focus="pull"'
 ```
 
 #### Running Tests Serially
